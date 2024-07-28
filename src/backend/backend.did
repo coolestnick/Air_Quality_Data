@@ -16,7 +16,9 @@ type AirQualityUpdatePayload = record {
 };
 type Error = variant { NotFound : record { msg : text } };
 type Result = variant { Ok : AirQualityData; Err : Error };
-type Result_1 = variant { Ok : vec AirQualityData; Err : Error };
+type Result_1 = variant { Ok : nat64; Err : Error };
+type Result_2 = variant { Ok : vec AirQualityData; Err : Error };
+type Result_3 = variant { Ok : float64; Err : Error };
 type WeatherData = record {
   wind_speed : float64;
   temperature : float64;
@@ -25,11 +27,12 @@ type WeatherData = record {
 service : {
   add_air_quality_data : (AirQualityUpdatePayload) -> (opt AirQualityData);
   delete_air_quality_data : (nat64) -> (Result);
+  delete_air_quality_data_by_location : (text) -> (Result_1);
   get_air_quality_data : (nat64) -> (Result) query;
   get_air_quality_data_by_pollutant_level : (text, float64, float64) -> (
-      Result_1,
+      Result_2,
     ) query;
-  get_air_quality_data_by_timestamp_range : (nat64, nat64) -> (Result_1) query;
+  get_air_quality_data_by_timestamp_range : (nat64, nat64) -> (Result_2) query;
   get_air_quality_data_by_weather_conditions : (
       float64,
       float64,
@@ -37,8 +40,11 @@ service : {
       float64,
       float64,
       float64,
-    ) -> (Result_1) query;
-  get_all_air_quality_data : () -> (Result_1) query;
-  search_air_quality_data_by_location : (text) -> (Result_1) query;
+    ) -> (Result_2) query;
+  get_all_air_quality_data : () -> (Result_2) query;
+  get_average_air_quality_index : (text) -> (Result_3) query;
+  get_health_recommendations : (nat32) -> (text) query;
+  get_recent_air_quality_data : (nat64) -> (Result_2) query;
+  search_air_quality_data_by_location : (text) -> (Result_2) query;
   update_air_quality_data : (nat64, AirQualityUpdatePayload) -> (Result);
 }
